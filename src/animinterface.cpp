@@ -12,7 +12,7 @@
 
 #ifndef CBE_LIB
 AnimInterface::AnimInterface() {
-	mCBInstance = CBEnchanted::instance();
+	cbeInstance = CBEnchanted::instance();
 	
 }
 
@@ -25,61 +25,61 @@ bool AnimInterface::initializeAnimInterface() {
 }
 
 void AnimInterface::commandStopAnimation(void) {
-	if(mVideo) al_close_video(mVideo);
-	mVideo = nullptr;
+	if(video) al_close_video(video);
+	video = nullptr;
 }
 
 void AnimInterface::commandDrawAnimation(void) {
-	al_draw_scaled_bitmap(mCurrentFrame, 0, 0, mVideoWidth, mVideoHeight, 0, 0, mScaleX, mScaleY, 0);
+	al_draw_scaled_bitmap(currentFrame, 0, 0, videoWidth, videoHeight, 0, 0, scaleX, scaleY, 0);
 }
 
 void AnimInterface::functionPlayAnimation(void) {
-	ISString input = mCBInstance->popValue().toString();
+	ISString input = cbeInstance->popValue().toString();
 	if(input.empty()) {
-		mCBInstance->errors->createError("Cannot play animation! Given path is empty!");
+		cbeInstance->errors->createError("Cannot play animation! Given path is empty!");
 	}
 
-	if(mVideo) al_close_video(mVideo);
+	if(video) al_close_video(video);
 
 	std::string path = input.getStdString();
-	mVideo = al_open_video(path.c_str());
-	if(mVideo == nullptr) {
-		mCBInstance->pushValue((int)0);
+	video = al_open_video(path.c_str());
+	if(video == nullptr) {
+		cbeInstance->pushValue((int)0);
 		return;
 	}
 	
-	al_register_event_source(mCBInstance->getEventQueue(), al_get_video_event_source(mVideo));
-	al_start_video(mVideo, mCBInstance->soundInterface->getMixer());
+	al_register_event_source(cbeInstance->getEventQueue(), al_get_video_event_source(video));
+	al_start_video(video, cbeInstance->soundInterface->getMixer());
 }
 
 void AnimInterface::functionAnimationWidth(void) {
-	if(mVideo) {
-		mCBInstance->pushValue((int)((float)mVideoWidth * mScaleX));
+	if(video) {
+		cbeInstance->pushValue((int)((float)videoWidth * scaleX));
 		return;
 	}
-	mCBInstance->errors->createFatalError("There isn't video playing!");
-	mCBInstance->pushValue((int)0);
+	cbeInstance->errors->createFatalError("There isn't video playing!");
+	cbeInstance->pushValue((int)0);
 }
 
 void AnimInterface::functionAnimationHeight(void) {
-	if(mVideo) {
-		mCBInstance->pushValue((int)((float)mVideoWidth * mScaleX));
+	if(video) {
+		cbeInstance->pushValue((int)((float)videoWidth * scaleX));
 		return;
 	}
-	mCBInstance->errors->createFatalError("There isn't video playing!");
-	mCBInstance->pushValue((int)0);
+	cbeInstance->errors->createFatalError("There isn't video playing!");
+	cbeInstance->pushValue((int)0);
 }
 
 void AnimInterface::functionAnimationPlaying(void) {
-	mCBInstance->pushValue((int)(mVideo != nullptr));
+	cbeInstance->pushValue((int)(video != nullptr));
 }
 
 void AnimInterface::acquireNewFrame() {
-	mCurrentFrame = al_get_video_frame(mVideo);
-	mScaleX = al_get_video_scaled_width(mVideo);
-	mScaleY = al_get_video_scaled_height(mVideo);
-	mVideoWidth = 1.0f * al_get_bitmap_width(mCurrentFrame);
-	mVideoHeight = 1.0f * al_get_bitmap_height(mCurrentFrame);
+	currentFrame = al_get_video_frame(video);
+	scaleX = al_get_video_scaled_width(video);
+	scaleY = al_get_video_scaled_height(video);
+	videoWidth = 1.0f * al_get_bitmap_width(currentFrame);
+	videoHeight = 1.0f * al_get_bitmap_height(currentFrame);
 }
 
 #endif

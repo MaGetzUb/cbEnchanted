@@ -26,12 +26,12 @@ class CollisionCheck {
 		CollisionCheck(CBObject *object1, CBObject *object2);
 
 		/** Returns the object that is colliding */
-		CBObject* getObject1() const { return mObject1; }
+		CBObject* getObject1() const { return object1; }
 		/** Returns the object that is collided to */
-		CBObject* getObject2() const { return mObject2; }
+		CBObject* getObject2() const { return object2; }
 
 		/** Check if either of the collision objects are null */
-		bool isNull() const { return mObject1 == 0 || mObject2 == 0; }
+		bool isNull() const { return object1 == 0 || object2 == 0; }
 		/** Sets the objects that take part in this collision and resets safe coordinates. */
 		void setObjects(CBObject *a, CBObject *b);
 		/** Sets the type of collision for the colliding object. */
@@ -55,17 +55,17 @@ class CollisionCheck {
 		static bool CircleCircleTest(float x1, float y1, float r1, float x2, float y2, float r2);
 	private:
 		/** Object that has the collision set */
-		CBObject *mObject1;
+		CBObject *object1;
 		/** Object to collide to */
-		CBObject *mObject2;
+		CBObject *object2;
 
 		/** Latest coordinates of mObject1 where there were no collision. */
 		float safeX, safeY;
 
 		/** The type of collision, @see CollisionType */
-		CollisionType mCollisionType1, mCollisionType2;
+		CollisionType collisionType1, collisionType2;
 		/** The way collision is handled, @see CollisionHandling */
-		CollisionHandling mCollisionHandling;
+		CollisionHandling collisionHandling;
 
 		/** The amount of collisions detected */
 		uint16_t collisionCount;
